@@ -30,7 +30,7 @@ public class BroadCast extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
-		SharedPreferences pref = context.getSharedPreferences("prefs", 0);
+		SharedPreferences pref = context.getSharedPreferences("preference", 0);
         
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")){
 			if(pref.getBoolean("boot", true)){

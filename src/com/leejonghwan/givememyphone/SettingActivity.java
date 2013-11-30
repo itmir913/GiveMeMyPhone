@@ -46,7 +46,7 @@ public class SettingActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting);
 		
-		pref = getSharedPreferences("prefs", 0);
+		pref = getSharedPreferences("preference", 0);
 		editor = pref.edit();
 		
 		bootable = (CheckBox) findViewById(R.id.bootable);

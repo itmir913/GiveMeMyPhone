@@ -26,7 +26,7 @@ public class PassWord extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pass_word);
 		
-		pref = getSharedPreferences("prefs", 0);
+		pref = getSharedPreferences("preference", 0);
 		
 		// 정답을 확인합니다
 		answer = pref.getString("password", "");

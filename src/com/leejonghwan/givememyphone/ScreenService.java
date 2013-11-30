@@ -71,7 +71,7 @@ public class ScreenService extends Service {
 		 * 2.0 업데이트
 		 * 서비스가 강제로 종료되면 다시 서비스를 실행합니다.
 		 */
-		SharedPreferences pref = getSharedPreferences("prefs", 0);
+		SharedPreferences pref = getSharedPreferences("preference", 0);
 		if(pref.getBoolean("Service_Running", false)){
 			Intent intent = new Intent(this, BroadCast.class);
 			intent.setAction("ACTION_SERVICE_RESTART");

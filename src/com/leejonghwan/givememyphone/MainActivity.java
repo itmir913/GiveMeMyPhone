@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		pref = getSharedPreferences("prefs", 0);
+		pref = getSharedPreferences("preference", 0);
 		editor = pref.edit();
 		
 		if (pref.getBoolean("welcome", true)){

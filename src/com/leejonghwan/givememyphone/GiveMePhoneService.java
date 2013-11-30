@@ -151,7 +151,7 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 //		}
 		
 		// SharedPreferences을 얻는 과정
-		pref = getSharedPreferences("prefs", 0);
+		pref = getSharedPreferences("preference", 0);
 		
 		/**
 		 * 알림을 제거해 달라는 마켓 리뷰를 반영하여 설정에서 알림 비활성화 여부를 설정할수 있습니다
