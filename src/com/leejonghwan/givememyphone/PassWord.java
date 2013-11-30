@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
 
@@ -16,7 +17,9 @@ public class PassWord extends Activity {
 	 */
 	SharedPreferences pref;
 	EditText password;
-	int Password, answer;
+	
+//	int Password;
+	String answer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +29,11 @@ public class PassWord extends Activity {
 		pref = getSharedPreferences("prefs", 0);
 		
 		// 정답을 확인합니다
-		answer = pref.getInt("Password", 0);
+		answer = pref.getString("password", "");
+		Log.d("정답", answer);
 //		if(answer==0)
 //			finish();
-		
+
 		password = (EditText) findViewById(R.id.password);
 		password.addTextChangedListener(new TextWatcher() {
 
@@ -50,8 +54,8 @@ public class PassWord extends Activity {
 				 * 만약 입력한 값이 공백(없음, "")이라면 강제종료 오류가 뜨므로 이 전체를 try문으로 감싸 강제종료를 막습니다
 				 */
 				try {
-					Password = Integer.parseInt(arg0.toString());
-					if(Password==answer)
+//					Password = Integer.parseInt(arg0.toString());
+					if(arg0.toString().equals(answer))
 						finish(); // 정답이 맞을경우에만 이 액티비티를 닫습니다
 					} catch (Exception e) { }
 			}
