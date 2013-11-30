@@ -110,6 +110,16 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, PassWord.class));
 		
 		start_Btn = (Button) findViewById(R.id.service);
+		
+		/**
+		 * 2.1.1 업데이트
+		 * 서비스가 실행된 상태에서 어플을 켰을때 중지버튼으로 바뀌지 않던 오류 해결
+		 */
+		if(isServiceRunningCheck()){
+			start_Btn.setText(R.string.stopBtn);
+			start_Btn.setBackgroundResource(R.drawable.stop);
+		}
+		
 	}
 	
 	public void start_btn(View v){
@@ -152,7 +162,7 @@ public class MainActivity extends Activity {
 		     */
 			
 			if(!(MinSenserInt<=250))
-			 	   if(isServiceRunningCheck(getBaseContext())) { // 서비스가 돌아가고 있는 상태일경우 서비스를 중단합니다 isServiceRunningCheck()는 아래에 정의되어 있습니다
+			 	   if(isServiceRunningCheck()) { // 서비스가 돌아가고 있는 상태일경우 서비스를 중단합니다 isServiceRunningCheck()는 아래에 정의되어 있습니다
 			 		  /**
 			 		    * 1.1 업데이트 버그 픽스
 			 		    * 희안하게 unregisterReceiver(myReceiver);에서 강제종료 오류가 뜨므로
@@ -200,7 +210,7 @@ public class MainActivity extends Activity {
 	 * 서비스가 실행중이면 제거가 불가능하게 하였고 관리자 권한 취소와 함께 어플 제거 까지 이루어 진다
 	 */
 	public void del_btn(View v){
-		if(!isServiceRunningCheck(this)){
+		if(!isServiceRunningCheck()){
 			if (devicePolicyManager.isAdminActive(adminComponent))
 				devicePolicyManager.removeActiveAdmin(adminComponent);
 			
@@ -219,8 +229,8 @@ public class MainActivity extends Activity {
 	 * 1.1업데이트
 	 * 브로드캐스트리시버에서 참조를 위해 static으로 선언 변경
 	 */
-	 boolean isServiceRunningCheck(Context context) {
-	    	ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+	 boolean isServiceRunningCheck() {
+	    	ActivityManager manager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
 	    	for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
 	    	    if ("com.leejonghwan.givememyphone.GiveMePhoneService".equals(service.service.getClassName()))
 	    	        return true;
