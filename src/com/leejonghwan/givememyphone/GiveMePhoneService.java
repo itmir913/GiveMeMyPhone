@@ -16,10 +16,15 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.Log;
-import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
 public class GiveMePhoneService extends Service implements SensorEventListener {
+	/**
+	 * 2.0 업데이트
+	 * 필요없는 객체를 모두 제거하였고, 쓸대없이 메모리를 잡아먹는 일부 변수를 지역변수화 하여
+	 * 메모리 점유를 낮추었다
+	 */
+	
 	/**
 	 * 1.1 업데이트
 	 * 메인 액티비티에서 설정한 값을 저장하는대, 그 저장한 값을 이용해서
@@ -38,12 +43,16 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 	 * 이 서비스에서는 쓰래드를 사용합니다
 	 * 사용하는 이유는 비밀입니다
 	 */
-	Thread thread;
+	/**
+	 * 2.0 업데이트
+	 * 사용하지 않으면서 필요 없는 객제를 제거하였습니다
+	 */
+//	Thread thread;
 	
 	/**
 	 * 서비스가 실행되었을때 설정값을 저장하는 역할도 합니다
 	 */
-	static int Save_Min, Save_Delay;
+	int Save_Min, Save_Delay;
 	
 	/**
 	 * boolean isThread는 서비스가 종료되었을때 쓰래드(run메소드)가 중단되도록 설계되었다
@@ -60,58 +69,77 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 	/**
 	 * 센서관련 코드들
 	 */
-		long lastTime, currentTime, gabOfTime;
-	    float speed, lastX, lastY, lastZ, x, y, z, lastSpeed, tmp;
-		static final int DATA_X = SensorManager.DATA_X, DATA_Y = SensorManager.DATA_Y, DATA_Z = SensorManager.DATA_Z;
-	 
-	    public static SensorManager sensorManager;
-	    public static Sensor accelerormeterSensor;
-
-	    /**
-	     * 1.3 업데이트
-	     * 알림을 표시하는 메소드이다
-	     * 서비스가 시작되면 먼저 알림을 표시하도록 하고
-	     * 서비스가 종료된다면 알림을 종료하도록 설정하였다
-	     */
-	    private void showNotify(Context context, int num) {
-    		NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-    		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
-    		
-	    	if(num==1){
-	    		Notification notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.app_name), System.currentTimeMillis());
-	    		notification.flags = Notification.FLAG_ONGOING_EVENT;
-	    		// FLAG_AUTO_CANCEL:은 알림(확인하면 지워짐), FLAG_ONGOING_EVENT은 진행중표시
-	    		notification.setLatestEventInfo(context, context.getString(R.string.app_name), context.getString(R.string.running), contentIntent);
-	    		nm.notify(1234, notification);
-	    		/**
-	    		 * 1.4 업데이트 : 긴급 패치
-	    		 * Min값이 250 아래이면 심각한 에러이므로 에러 표시를 한다
-	    		 */
-	    	}else if (num==2){
-	    		Notification notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.app_name)+" "+context.getString(R.string.error), System.currentTimeMillis());
-	    		notification.flags = Notification.FLAG_AUTO_CANCEL;
-	    		notification.setLatestEventInfo(context, context.getString(R.string.Service_Error_1), String.format(context.getString(R.string.Service_Error_2), Save_Min), contentIntent);
-	    		nm.notify(4444, notification);
-	    	}
+//	long lastTime, currentTime, gabOfTime;
+//	float speed, lastX, lastY, lastZ, x, y, z, lastSpeed;
+//	final int DATA_X = SensorManager.DATA_X, DATA_Y = SensorManager.DATA_Y, DATA_Z = SensorManager.DATA_Z;
+	long lastTime;
+	float lastX, lastY, lastZ, lastSpeed;
+	final int DATA_X = SensorManager.DATA_X, DATA_Y = SensorManager.DATA_Y, DATA_Z = SensorManager.DATA_Z;
+	
+	SensorManager sensorManager;
+//	Sensor accelerormeterSensor;
+	
+    /**
+     * 1.3 업데이트
+	 * 알림을 표시하는 메소드이다
+	 * 서비스가 시작되면 먼저 알림을 표시하도록 하고
+	 * 서비스가 종료된다면 알림을 종료하도록 설정하였다
+	 */
+	private void showNotify(Context context, boolean num) {
+		NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
+		
+		/**
+		 * 2.0업데이트
+		 * 마켓 리뷰를 반영하여 투명 상단바 아이콘을 적용하였습니다 
+		 */
+		if(num){
+			Notification notification;
+			if(pref.getBoolean("clear_icon", false))
+				notification = new Notification(R.drawable.clear_icon, context.getString(R.string.app_name), System.currentTimeMillis());
+			else
+				notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.app_name), System.currentTimeMillis());
+			
+			notification.flags = Notification.FLAG_ONGOING_EVENT;
+			
+			// FLAG_AUTO_CANCEL:은 알림(확인하면 지워짐), FLAG_ONGOING_EVENT은 진행중표시
+			notification.setLatestEventInfo(context, context.getString(R.string.app_name), context.getString(R.string.running), contentIntent);
+			nm.notify(1234, notification);
+			/**
+			 * 1.4 업데이트 : 긴급 패치
+			 * Min값이 250 아래이면 심각한 에러이므로 에러 표시를 한다
+			 */
+		}else if (!num){
+			
+			Notification notification;
+			if(pref.getBoolean("clear_icon", false))
+				notification = new Notification(R.drawable.clear_icon, context.getString(R.string.app_name)+" "+context.getString(R.string.error), System.currentTimeMillis());
+			else
+				notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.app_name)+" "+context.getString(R.string.error), System.currentTimeMillis());
+			
+	    	notification.flags = Notification.FLAG_AUTO_CANCEL;
+	    	notification.setLatestEventInfo(context, context.getString(R.string.Service_Error_1), String.format(context.getString(R.string.Service_Error_2), Save_Min), contentIntent);
+	    	nm.notify(4444, notification);
 	    }
-	    
-	    private void DeleteNotify(Context context){
-	    	NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-	    	nm.cancel(1234);
-	    }
+	}
+	
+	private void DeleteNotify(Context context){
+		NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.cancel(1234);
+	}
 	    
 	/**
 	 * onCreate메소드는 서비스가 시작되면 자동으로 호출되는 메소드 입니다
 	 */
+	@Override
 	public void onCreate() {
 		super.onCreate();
 		Log.d("내폰내놔 서비스", "시작");
-		showNotify(this, 1);
 		
 //		if(MainActivity.Boot_Service_check!=1){
 //			/**
 //			 * 1.5 업데이트
-//			 * 서비스에서 브로드캐스트를 관장하지 않습니다 에서
+//			 * 서비스에서 브로드캐스트를 관장하지 않습니다
 //			 * 부팅시에(브로드캐스트리시버에서 서비스를 시작하므로 메인액티비티에 있는 Boot_Service_check는 1이 아닙니다)
 //			 * 리시버가 자동 실행되도록 설정
 //			 */
@@ -125,6 +153,12 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 		// SharedPreferences을 얻는 과정
 		pref = getSharedPreferences("prefs", 0);
 		
+		/**
+		 * 알림을 제거해 달라는 마켓 리뷰를 반영하여 설정에서 알림 비활성화 여부를 설정할수 있습니다
+		 */
+		if(pref.getBoolean("notification", false))
+			showNotify(this, true);
+		
 		// 화면이 켜져 있을때만 작동하도록 하는 PowerManager
 		// 시스탬 서비스로 존재하므로 서비스를 얻음
 		mPm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -136,12 +170,10 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 		 * 센서관련 코드들
 		 */
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		accelerormeterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		Sensor accelerormeterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
 		if (accelerormeterSensor != null)
-			sensorManager.registerListener(this, accelerormeterSensor,
-					SensorManager.SENSOR_DELAY_GAME);
-		// 위 if아래 구문은 두줄처럼 보이지만 실제로는 엔터를 누른 한줄이다
+			sensorManager.registerListener(this, accelerormeterSensor, SensorManager.SENSOR_DELAY_GAME);
 		
 		/**
 		 * 메인 액티비티에서 두개의 값을 가져옵니다
@@ -168,12 +200,10 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 //		thread.start();
 	}
 	
-	/**
-	 * implements Runnable에서 필요하지만 나에겐 필요없는 메소드
-	 * 지울수도 없다
-	 */
 	@Override
-	public IBinder onBind(Intent arg0) { return null; }
+	public IBinder onBind(Intent arg0) {
+		return null;
+	}
 	
 	/**
 	 * 쓰래드가 시작되면 호출되는 메소드
@@ -183,7 +213,6 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 	 */
 //	@Override
 //	public void run() {
-//		// TODO Auto-generated method stub
 //	}
 	
 	/**
@@ -192,7 +221,6 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 	 */
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 
 		/**
@@ -203,9 +231,9 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 		
 //		unregisterReceiver(myReceiver);
 //      Log.d("브로드캐스트", "중지");
-		
-		DeleteNotify(this);
-		Toast.makeText(this, "내폰내놔 서비스가 종료되었습니다", Toast.LENGTH_LONG).show();
+		if(pref.getBoolean("notification", false))
+			DeleteNotify(this);
+//		Toast.makeText(this, "내폰내놔 서비스가 종료되었습니다", Toast.LENGTH_LONG).show();
 		Log.d("내폰내놔 서비스", "종료");
 	}
 	
@@ -223,58 +251,64 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if(mPm.isScreenOn())
-		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			currentTime = System.currentTimeMillis();
-			gabOfTime = currentTime - lastTime;
-			if (gabOfTime > 100){
-				lastTime = currentTime;
-				x = event.values[SensorManager.DATA_X];
-				y = event.values[SensorManager.DATA_Y];
-				z = event.values[SensorManager.DATA_Z];
-				
-				speed = Math.abs(x + y + z - lastX - lastY - lastZ) / gabOfTime * 10000;
-				/**
-				 * 1.4 업데이트 : 긴급 패치
-				 * Min값이 250아래로 떨어질경우 화면을 키자마자 꺼져버리므로 에러상황이다
-				 * 그러므로 작동하지 않도록 처리한다
-				 */
-				if (Save_Min < 250){
-					Log.e("내폰과 대화 서비스", "Min값이 250아래로 떨어졌습니다");
-					Log.e("내폰과 대화 서비스", "아주 심각합니다 서비스를 종료합니다");
-					Log.e("내폰과 대화 서비스", "Save_Min값 : "+Save_Min);
-					if (sensorManager != null)
-						sensorManager.unregisterListener(this);
-					DeleteNotify(this);
-					showNotify(this, 2);
-					onDestroy();
-					/**
-					 * 1.5 업데이트
-					 * Save_Min이 250아래일때, 서비스까지 완전히 종료하도록 소스 개선
-					 */
-					Intent myIntent = new Intent(getBaseContext(), GiveMePhoneService.class);
-					stopService(myIntent);
-				}else if (speed > Save_Min) {
-					// 센서 가속도가 최소 값보다 크다!
-					Log.d("가속도 센서", "Speed :"+speed+" 감도: "+Save_Min);
+			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+				long currentTime = System.currentTimeMillis();
+				long gabOfTime = currentTime - lastTime;
+				if (gabOfTime > 100){
+					lastTime = currentTime;
+					float x = event.values[SensorManager.DATA_X];
+					float y = event.values[SensorManager.DATA_Y];
+					float z = event.values[SensorManager.DATA_Z];
 					
+					float speed = Math.abs(x + y + z - lastX - lastY - lastZ) / gabOfTime * 10000;
 					/**
-					 * 1.2 업데이트
-					 * 진동 설정 가능
+					 * 1.4 업데이트 : 긴급 패치
+					 * Min값이 250아래로 떨어질경우 화면을 키자마자 꺼져버리므로 에러상황이다
+					 * 그러므로 작동하지 않도록 처리한다
 					 */
-					if(pref.getInt("Vibrator", 0)==1){ // 진동을 활성화 했을경우
-						Vibrator vide = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+					if (Save_Min < 250){
+						Log.e("내폰과 대화 서비스", "Min값이 250아래로 떨어졌습니다");
+						Log.e("내폰과 대화 서비스", "아주 심각합니다 서비스를 종료합니다");
+						Log.e("내폰과 대화 서비스", "Save_Min값 : "+Save_Min);
+						if (sensorManager != null)
+							sensorManager.unregisterListener(this);
+						if(pref.getBoolean("notification", false)){
+							DeleteNotify(this);
+							showNotify(this, false);
+						}
+						onDestroy();
 						/**
-						 * 1.1 업데이트
-						 * 진동 시간을 대폭 축소
+						 * 1.5 업데이트
+						 * Save_Min이 250아래일때, 서비스까지 완전히 종료하도록 소스 개선
 						 */
-						vide.vibrate(100);
+						Intent myIntent = new Intent(getBaseContext(), GiveMePhoneService.class);
+						stopService(myIntent);
+					}else if (speed > Save_Min) {
+						// 센서 가속도가 최소 값보다 크다!
+						Log.d("가속도 센서", "Speed :"+speed+" 감도: "+Save_Min);
+						
+						/**
+						 * 1.2 업데이트
+						 * 진동 설정 가능
+						 */
+						if(pref.getBoolean("Vibrator", false)){ // 진동을 활성화 했을경우
+							Vibrator vide = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+							/**
+							 * 1.1 업데이트
+							 * 진동 시간을 대폭 축소
+							 */
+							/**
+							 * 2.0 업데이트
+							 * 진동 시간이 너무 짧다고 생각하여 100에서 500으로 값 변경
+							 */
+							vide.vibrate(500);
+						}
+						DeviceManager.lockNow();
 					}
-					DeviceManager.lockNow();
+					lastX = event.values[DATA_X];
+					lastY = event.values[DATA_Y];
+					lastZ = event.values[DATA_Z];
 				}
-				lastX = event.values[DATA_X];
-				lastY = event.values[DATA_Y];
-				lastZ = event.values[DATA_Z];
-	           }
 	       }
 	}
 	// 센서 끝

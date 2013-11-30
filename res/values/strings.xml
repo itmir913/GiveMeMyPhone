@@ -2,14 +2,14 @@
 <resources>
 
     <string name="app_name">GiveMe MyPhone</string>
-    <string name="delete_permission">Remove device administrators</string>
+    <string name="delete_permission">Remove</string>
     <string name="restart">Restart</string>
     <string name="maintext">GiveMe MyPhone App
-\n\"You have used the phone, If Someone stil your phone
-\nThe App make phone lock status\"</string>
+\nYou have used the phone, If Someone stil your phone
+\nThe App make phone lock status</string>
     <string name="testBtn">Try to Test</string>
-    <string name="serviceBtn">Service Start</string>
-    <string name="stopBtn">Service Stop</string>
+    <string name="serviceBtn">Start</string>
+    <string name="stopBtn">Stop</string>
     <string name="min">Min : %1$d</string>
     <string name="Delay">Screenon Delay : %1$d Second</string>
     <string name="not_work">, May Not Work</string>
@@ -22,6 +22,8 @@
 \nApp need permission for Lock function</string>
     <string name="alert">Alert!</string>
     <string name="ok">OK</string>
+    <string name="exit">Exit</string>
+    <string name="blank">You have not entered nothing</string>
     <string name="alert_message">This App need for administrator permission
 \nIf you have not the administrator permission, Use Not The app</string>
     <string name="now_test">Shake it now!</string>
@@ -37,17 +39,29 @@
     <string name="pass">Skip</string>
     <string name="Vibrator">Vibrator</string>
     <string name="password">PassWord</string>
-    <string name="enter_password">Enter The PassWord Please</string>
+    <string name="enter_password">Enter the your Password, Please</string>
+    <string name="enter_password_ok">Password has been registered</string>
     <string name="running">GiveMyPhone Service is Running!</string>
     <string name="Service_Error_1">GiveMyPhone Service Error!!!!!</string>
     <string name="Service_Error_2">The minimum value is below 250
 \nThis is Very Serious error, so Stop the service.
 \nminimum : %1$s, Please tell me the ScreenShot</string>
     <string name="error">Error!!!</string>
-    <string name="update_log">App updated!
+    <string name="update_log">App was updated!
 \nThanks for your use my App
-\n\nIf you hope delete the app, First, Desable Device manager
-\n(MainScreen - MenuKey or Setting - Security - DeviceManager) 
+\n\nIf you hope delete the app, Press the Remove Button in App
+\n
+\n[2.0]
+\n-Change the UI that countrified
+\n-Add Applications Delete button
+\n-Fix Error in service execution
+\n-Add the ability to disable the notification in progress
+\n-Added transparent notification icon function
+\n-After booting, Whel the screen off, then fix the error that the service does not turn off
+\n-Task Manager immune
+\n-Optimization source
+\n-Add information Word
+\n-Optimization of the speed or other
 \n
 \n[1.6]
 \n-Clean Source
@@ -74,5 +88,13 @@
 \n
 \n[1.0]
 \n-First Upload</string>
-
+    <string name="Setting">Setting</string>
+    <string name="madeby">GiveMeMyPhone, Version : %1$s
+\nCopyright <![CDATA[©]]> 2013 whdghks913
+\nAll rights reserved</string>
+    <string name="notification">Notification</string>
+    <string name="service_not_start">MinSenser values is under the 250, or You don\'t set Setting</string>
+    <string name="Not_Install">Service is Running, Not uninstall</string>
+    <string name="clear_icon_noti">Transparent notification icon</string>
+    
 </resources>

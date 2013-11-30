@@ -2,14 +2,14 @@
 <resources>
 
     <string name="app_name">내폰 내놔</string>
-    <string name="delete_permission">기기 관리자 제거</string>
+    <string name="delete_permission">어플 제거</string>
     <string name="restart">재시작</string>
     <string name="maintext">내폰내놔는 핸드폰을 사용하고 있을때
 \n누군가 폰을 뺏어가서 강한 흔들림이 감지될경우
-\자동으로 폰을 잠금상태로 설정해주는 어플입니다</string>
+\n자동으로 폰을 잠금상태로 설정해주는 어플입니다</string>
     <string name="testBtn">테스트하기</string>
-    <string name="serviceBtn">서비스 시작</string>
-    <string name="stopBtn">서비스 중지</string>
+    <string name="serviceBtn">시작</string>
+    <string name="stopBtn">중지</string>
     <string name="min">최소 센서 감도 : %1$s</string>
     <string name="Delay">켜짐 딜레이 : %1$s초</string>
     <string name="not_work">, 작동하지 않을수 있습니다</string>
@@ -23,6 +23,8 @@
 \n이 어플은 관리자 권한을 필요로 합니다</string>
     <string name="alert">경고!</string>
     <string name="ok">확인</string>
+    <string name="exit">닫기</string>
+    <string name="blank">아무것도 입력되지 않았습니다</string>
     <string name="alert_message">이 어플은 관리자 권한이 필요합니다
 \n권한이 없다면, 이 어플을 사용할수 없습니다</string>
     <string name="now_test">지금 테스트 하세요!</string>
@@ -39,6 +41,7 @@
     <string name="Vibrator">진동</string>
     <string name="password">비밀번호</string>
     <string name="enter_password">비밀번호를 입력하세요</string>
+    <string name="enter_password_ok">비밀번호가 설정되었습니다</string>
     <string name="running">내폰내놔 서비스가 동작중 입니다</string>
     <string name="Service_Error_1">내폰 내놔 서비스 에러!!</string>
     <string name="Service_Error_2">최솟값이 250아래입니다!!
@@ -47,9 +50,19 @@
     <string name="error">에러!!!</string>
     <string name="update_log">어플이 업데이트 되었습니다!
 \n어플을 사용해 주셔서 감사합니다!
-\n\n만약 이 어플을 지우려면, 디바이스 관리자 권한을 해제해야 합니다
-\n(메인화면에서 메뉴키를 누르거나 설정 - 보안 - 기기관리자에 들어가세요)
-\n마켓설명/어플설명/메인화면의 메뉴키/심지어 업데이트마다 방법을 설명하는대도 못알아 먹고 마켓 별점 1점주는 바보는 없겠죠? 
+\n\n만약 이 어플을 지우려면, 어플 안에 있는 제거 버튼을 눌러주세요
+\n
+\n[2.0]
+\n-촌티나는 UI변경
+\n-어플 제거 버튼 내장
+\n-서비스 실행중 오류 해결
+\n-진행중 알림 비활성화 기능 추가
+\n-투명 알림 아이콘 기능 추가
+\n-부팅후, 화면이 꺼져도 서비스가 꺼지지 않는 오류 수정
+\n-작업관리자 면역됨
+\n-소스 최적화
+\n-안내 문구 추가
+\n-기타 속도 최적화
 \n
 \n[1.6]
 \n-소스 최적화
@@ -79,5 +92,13 @@
 \n
 \n[1.0]
 \n-처음 업로드</string>
-
+    <string name="Setting">설정</string>
+    <string name="madeby">내폰내놔, Version : %1$s
+\nCopyright <![CDATA[©]]> 2013 whdghks913
+\nAll rights reserved</string>
+    <string name="notification">알림</string>
+    <string name="service_not_start">최저 센서 값이 250아래거나, 값을 설정하지 않으셨습니다</string>
+    <string name="Not_Install">서비스가 실행중이므로 제거할수 없습니다</string>
+    <string name="clear_icon_noti">투명 알림 아이콘</string>
+    
 </resources>
