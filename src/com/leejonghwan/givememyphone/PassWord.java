@@ -6,19 +6,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.EditText;
 
 public class PassWord extends Activity {
-	/**
-	 * 1.2 업데이트
-	 * 이 액티비티는 내폰내놔 실행시 비밀번호가 있다면
-	 * 비밀번호를 입력하라는 메세지를 띄우는 액티비티 입니다
-	 */
 	SharedPreferences pref;
 	EditText password;
-	
-//	int Password;
 	String answer;
 
 	@Override
@@ -28,40 +20,28 @@ public class PassWord extends Activity {
 		
 		pref = getSharedPreferences("preference", 0);
 		
-		// 정답을 확인합니다
 		answer = pref.getString("password", "");
-		Log.d("정답", answer);
-//		if(answer==0)
-//			finish();
-
+		
 		password = (EditText) findViewById(R.id.password);
 		password.addTextChangedListener(new TextWatcher() {
 
 			@Override
-			public void afterTextChanged(Editable arg0) { }
-
+			public void afterTextChanged(Editable s){}
+			
 			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { }
-
-			/**
-			 * 입력한 값이 변할때마다 정답을 확인합니다
-			 */
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after){}
+			
 			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				// TODO Auto-generated method stub
-				/**
-				 * 만약 입력한 값이 공백(없음, "")이라면 강제종료 오류가 뜨므로 이 전체를 try문으로 감싸 강제종료를 막습니다
-				 */
+			public void onTextChanged(CharSequence charS, int start, int before, int count) {
 				try {
-//					Password = Integer.parseInt(arg0.toString());
-					if(arg0.toString().equals(answer)){
+					if(charS.toString().equals(answer)){
 						Intent i = new Intent(PassWord.this, MainActivity.class);
 						i.putExtra("PassWord_Enable", true);
 						startActivity(i);
 						finish();
 					}
-				} catch (Exception e) { }
+				} catch (Exception e){}
 			}
 		});
 	}

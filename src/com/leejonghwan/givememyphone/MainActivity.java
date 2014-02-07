@@ -56,10 +56,6 @@ public class MainActivity extends Activity {
 		editor = pref.edit();
 		
 		if (pref.getBoolean("welcome", true)){
-			editor.putBoolean("Notification", true);
-			editor.putInt("MinSenser", 1000);
-			editor.putInt("Delay", 1);
-			
 			editor.putBoolean("welcome", false).commit();
 			startActivity(new Intent(this, Welcome.class));
 		}

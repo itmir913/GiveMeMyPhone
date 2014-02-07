@@ -27,12 +27,6 @@ import android.widget.Toast;
 
 public class SettingActivity extends Activity {
 	
-	/**
-	 * 1.1 업데이트
-	 * 설정값을 저장할수 있는 SharedPreferences을 사용하여 구현
-	 * SharedPreferences을 이용해서 값이 변할때마다 실시간으로 변한 값을 저장하고,
-	 * 서비스와 브로드캐스트리시버에서는 저장한 값을 얻어와서 구현에 성공했습니다
-	 */
 	SharedPreferences pref;
 	SharedPreferences.Editor editor;
 	
@@ -177,10 +171,8 @@ public class SettingActivity extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
 					editor.putBoolean("boot", true).commit();
-//					Toast.makeText(SettingActivity.this, "부팅 자동 적용 체크됨", Toast.LENGTH_SHORT).show();
 				}else{
 					editor.putBoolean("boot", false).commit();
-//					Toast.makeText(SettingActivity.this, "부팅 자동 적용 비활성화", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -191,10 +183,8 @@ public class SettingActivity extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
 					editor.putBoolean("Vibrator", true).commit();
-//					Toast.makeText(SettingActivity.this, "진동 설정", Toast.LENGTH_SHORT).show();
 				}else{
 					editor.putBoolean("Vibrator", false).commit();
-//					Toast.makeText(SettingActivity.this, "진동 해제", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -275,10 +265,6 @@ public class SettingActivity extends Activity {
     	for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
     	    if ("com.leejonghwan.givememyphone.GiveMePhoneService".equals(service.service.getClassName()))
     	        return true;
-    	/** 
-    	 * 1.1 업데이트
-    	 * 코드의 간결화 : 쓸대없는 { 와 }의 사용을 방지
-    	 */
     	return false;
     }
 	
