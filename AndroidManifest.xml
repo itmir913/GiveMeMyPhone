@@ -62,7 +62,6 @@
         <activity android:name="com.leejonghwan.givememyphone.Welcome" />
         <activity android:name="com.leejonghwan.givememyphone.PassWord" />
         <activity android:name="com.leejonghwan.givememyphone.SettingActivity" />
-        <activity android:name="com.leejonghwan.givememyphone.MainActivity2" />
     </application>
 
 </manifest>

@@ -1,12 +1,12 @@
 package com.leejonghwan.givememyphone;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.widget.EditText;
 
 public class PassWord extends Activity {
@@ -55,25 +55,14 @@ public class PassWord extends Activity {
 				 */
 				try {
 //					Password = Integer.parseInt(arg0.toString());
-					if(arg0.toString().equals(answer))
-						finish(); // 정답이 맞을경우에만 이 액티비티를 닫습니다
-					} catch (Exception e) { }
+					if(arg0.toString().equals(answer)){
+						Intent i = new Intent(PassWord.this, MainActivity.class);
+						i.putExtra("PassWord_Enable", true);
+						startActivity(i);
+						finish();
+					}
+				} catch (Exception e) { }
 			}
 		});
 	}
-	
-	@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-        	/**
-        	 * 뒤로가기 키를 눌러 MainActivity로 넘어가는 편법을 예방합니다
-        	 */
-        	moveTaskToBack(true);
-        	finish();
-        	android.os.Process.killProcess(android.os.Process.myPid());
-        	return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
 }

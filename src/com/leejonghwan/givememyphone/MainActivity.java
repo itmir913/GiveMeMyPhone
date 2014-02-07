@@ -64,6 +64,13 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, Welcome.class));
 		}
 		
+		boolean unlocked_password = getIntent().getBooleanExtra("PassWord_Enable", false);
+        if(!unlocked_password)
+            if(pref.getBoolean("password_enable", false)){
+                startActivity(new Intent(this, PassWord.class));
+                finish();
+            }
+		
 		/**
 		 * 1.6 업데이트
 		 * 업데이트마다 로그를 표시하도록 설정
@@ -106,9 +113,6 @@ public class MainActivity extends Activity {
 			startActivityForResult(intent, 1);
 		}
 		
-		if(pref.getBoolean("password_enable", false))
-			startActivity(new Intent(this, PassWord.class));
-		
 		start_Btn = (Button) findViewById(R.id.service);
 		
 		/**
@@ -119,7 +123,6 @@ public class MainActivity extends Activity {
 			start_Btn.setText(R.string.stopBtn);
 			start_Btn.setBackgroundResource(R.drawable.stop);
 		}
-		
 	}
 	
 	public void start_btn(View v){
