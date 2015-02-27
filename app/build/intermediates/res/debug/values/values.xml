@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/D:/Android/AndroidStudio/givememyphone/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <color name="Background">#E0FFFF</color>
+    <!-- From: file:/D:/Android/AndroidStudio/givememyphone/app/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- From: file:/D:/Android/AndroidStudio/givememyphone/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="Delay">Screenon Delay : %1$d Second</string>
+    <string name="Not_Install">Service is Running, Not uninstall</string>
+    <string name="Service_Error_1">GiveMyPhone Service Error!!!!!</string>
+    <string name="Service_Error_2">The minimum value is below 250
+\nThis is Very Serious error, so Stop the service.
+\nminimum : %1$s, Please tell me the ScreenShot</string>
+    <string name="Setting">Setting</string>
+    <string name="Vibrator">Vibrator</string>
+    <string name="alert">Alert!</string>
+    <string name="alert_message">This App need for administrator permission
+\nIf you have not the administrator permission, Use Not The app</string>
+    <string name="app_name">GiveMe MyPhone</string>
+    <string name="blank">You have not entered nothing</string>
+    <string name="boot_able">Applied automatically at boot time</string>
+    <string name="clear_icon_noti">Transparent notification icon</string>
+    <string name="delete_permission">Remove</string>
+    <string name="device_admin">Because The screen off function, this app is a must have administrator rights
+\nPlease remove the app, Go to Setting - Security - Device Manager and uncheck!</string>
+    <string name="device_admin_disabled">administrator permission has been removed
+\nApp need permission for Lock function</string>
+    <string name="enter_password">Enter the your Password, Please</string>
+    <string name="enter_password_ok">Password has been registered</string>
+    <string name="error">Error!!!</string>
+    <string name="exit">Exit</string>
+    <string name="madeby">GiveMeMyPhone, Version : %1$s
+\nCopyright <![CDATA[©]]> 2013 whdghks913
+\nAll rights reserved</string>
+    <string name="maintext">GiveMe MyPhone App
+\nYou have used the phone, If Someone stil your phone
+\nThe App make phone lock status</string>
+    <string name="min">Min : %1$d</string>
+    <string name="not_used">, Can not be used!!!</string>
+    <string name="not_work">, May Not Work</string>
+    <string name="notification">Notification</string>
+    <string name="now_test">Shake it now!</string>
+    <string name="ok">OK</string>
+    <string name="pass">Skip</string>
+    <string name="password">PassWord</string>
+    <string name="restart">Restart</string>
+    <string name="running">GiveMyPhone Service is Running!</string>
+    <string name="serviceBtn">Start</string>
+    <string name="service_already">Services were already running</string>
+    <string name="service_not_start">MinSenser values is under the 250, or You don\'t set Setting</string>
+    <string name="stopBtn">Stop</string>
+    <string name="testBtn">Try to Test</string>
+    <string name="test_result">Result : Success!</string>
+    <string name="update_log">App was updated!
+\nThanks for your use my App
+\n\nIf you hope delete the app, Press the Remove Button in App
+\n
+\n[2.2]
+\n-PassWord Bug Fix
+\n
+\n[2.1.2]
+\n-Abort Error Fix
+\n
+\n[2.1.1]
+\n-Start Button error fix
+\n-kitkat 4.4
+\n
+\n[2.1]
+\n-Fix PassWord Error
+\n
+\n[2.0]
+\n-Change the UI that countrified
+\n-Add Applications Delete button
+\n-Fix Error in service execution
+\n-Add the ability to disable the notification in progress
+\n-Added transparent notification icon function
+\n-After booting, Whel the screen off, then fix the error that the service does not turn off
+\n-Task Manager immune
+\n-Optimization source
+\n-Add information Word
+\n-Optimization of the speed or other
+\n
+\n[1.6]
+\n-Clean Source
+\n
+\n[1.4]
+\n-If you checked automatic boot start, when screen on : screen off error Fix
+\n
+\n[1.3]
+\n-Add Notification
+\n
+\n[1.2]
+\n-Add Vibrator
+\n-Add Password
+\n-Add MainScreen Scroll
+\n
+\n[1.1]
+\n-All Error Fixed
+\n-Add Restart Button
+\n-Add Delay
+\n-Automatic Boot start
+\n-Welcome
+\n-Values saved
+\n-Speed up
+\n
+\n[1.0]
+\n-First Upload</string>
+    <string name="very_sore">, Can be too sensitive</string>
+    <string name="welcome_1">Welcome To GiveMePhone!
+\n\nNow, I will explain The app function!
+\n\nOne. The App have MinSenser Sensitivity
+\nTwo. App hava ScreenOn delay(delay is very useful!)
+\nThree. If your phone is booting, App iIs automatically applied
+\nFour. Touch The MenuKey, You always has been removed the administrator permission
+\n\nThanks for use my App!</string>
+    <!-- From: file:/D:/Android/AndroidStudio/givememyphone/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+</resources>
