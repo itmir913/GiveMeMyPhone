@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,144 +19,150 @@ import android.os.Vibrator;
 
 @SuppressWarnings("deprecation")
 public class GiveMePhoneService extends Service implements SensorEventListener {
-	SharedPreferences pref;
-	PowerManager mPm;
-	DevicePolicyManager DeviceManager;
-	
-	int Save_Min, Save_Delay;
-	
-	long lastTime;
-	float lastX, lastY, lastZ, lastSpeed;
-	final int DATA_X = SensorManager.DATA_X, DATA_Y = SensorManager.DATA_Y, DATA_Z = SensorManager.DATA_Z;
-	
-	SensorManager sensorManager;
-	
-	private void showNotify(Context mContext, boolean num) {
-		NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, new Intent(mContext, MainActivity.class), 0);
-		
-		/**
-		 * 2.0æ˜µ•¿Ã∆Æ
-		 * ∏∂ƒœ ∏Æ∫‰∏¶ π›øµ«œø© ≈ı∏Ì ªÛ¥‹πŸ æ∆¿Ãƒ‹¿ª ¿˚øÎ«œø¥Ω¿¥œ¥Ÿ 
-		 */
-		if(num){
-			Notification notification;
-			if(pref.getBoolean("clear_icon", false))
-				notification = new Notification(R.drawable.clear_icon, mContext.getString(R.string.app_name), System.currentTimeMillis());
-			else
-				notification = new Notification(R.drawable.ic_launcher, mContext.getString(R.string.app_name), System.currentTimeMillis());
-			
-			notification.flags = Notification.FLAG_ONGOING_EVENT;
-			
-			notification.setLatestEventInfo(mContext, mContext.getString(R.string.app_name), mContext.getString(R.string.running), contentIntent);
-			nm.notify(1234, notification);
-			/**
-			 * 1.4 æ˜µ•¿Ã∆Æ : ±‰±ﬁ ∆–ƒ°
-			 * Min∞™¿Ã 250 æ∆∑°¿Ã∏È Ω…∞¢«— ø°∑Ø¿Ãπ«∑Œ ø°∑Ø «•Ω√∏¶ «—¥Ÿ
-			 */
-		}else if (!num){
-			
-			Notification notification;
-			if(pref.getBoolean("clear_icon", false))
-				notification = new Notification(R.drawable.clear_icon, mContext.getString(R.string.app_name)+" "+mContext.getString(R.string.error), System.currentTimeMillis());
-			else
-				notification = new Notification(R.drawable.ic_launcher, mContext.getString(R.string.app_name)+" "+mContext.getString(R.string.error), System.currentTimeMillis());
-			
-	    	notification.flags = Notification.FLAG_AUTO_CANCEL;
-	    	notification.setLatestEventInfo(mContext, mContext.getString(R.string.Service_Error_1), String.format(mContext.getString(R.string.Service_Error_2), Save_Min), contentIntent);
-	    	nm.notify(4444, notification);
-	    }
-	}
-	
-	private void DeleteNotify(Context mContext){
-		NotificationManager nm = (NotificationManager)mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		nm.cancel(1234);
-	}
-	
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		
-		pref = getSharedPreferences("preference", 0);
-		
-		/**
-		 * æÀ∏≤¿ª ¡¶∞≈«ÿ ¥ﬁ∂Û¥¬ ∏∂ƒœ ∏Æ∫‰∏¶ π›øµ«œø© º≥¡§ø°º≠ æÀ∏≤ ∫Ò»∞º∫»≠ ø©∫Œ∏¶ º≥¡§«“ºˆ ¿÷Ω¿¥œ¥Ÿ
-		 */
-		if(pref.getBoolean("notification", true))
-			showNotify(this, true);
-		
-		mPm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-	    DeviceManager = (DevicePolicyManager)getSystemService(Context.DEVICE_POLICY_SERVICE);
+    SharedPreferences pref;
+    PowerManager mPm;
+    DevicePolicyManager DeviceManager;
 
-		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		Sensor accelerormeterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    int Save_Min, Save_Delay;
 
-		if (accelerormeterSensor != null)
-			sensorManager.registerListener(this, accelerormeterSensor, SensorManager.SENSOR_DELAY_GAME);
-		
-		Save_Min = pref.getInt("MinSenser", 1000);
-		Save_Delay = pref.getInt("Delay", 1);
-	}
-	
-	@Override
-	public IBinder onBind(Intent arg0) {
-		return null;
-	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		
-		if (sensorManager != null)
-			sensorManager.unregisterListener(this);
-		
-		if(pref.getBoolean("notification", false))
-			DeleteNotify(this);
-	}
-	
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+    long lastTime;
+    float lastX, lastY, lastZ, lastSpeed;
+    final int DATA_X = SensorManager.DATA_X, DATA_Y = SensorManager.DATA_Y, DATA_Z = SensorManager.DATA_Z;
 
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		if(mPm.isScreenOn())
-			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-				long currentTime = System.currentTimeMillis();
-				long gabOfTime = currentTime - lastTime;
-				if (gabOfTime > 100){
-					lastTime = currentTime;
-					float x = event.values[SensorManager.DATA_X];
-					float y = event.values[SensorManager.DATA_Y];
-					float z = event.values[SensorManager.DATA_Z];
-					
-					float speed = Math.abs(x + y + z - lastX - lastY - lastZ) / gabOfTime * 10000;
-					
-					if (Save_Min < 250){
-						if (sensorManager != null)
-							sensorManager.unregisterListener(this);
-						if(pref.getBoolean("notification", false)){
-							DeleteNotify(this);
-							showNotify(this, false);
-						}
-						onDestroy();
-						
-						Intent myIntent = new Intent(getBaseContext(), GiveMePhoneService.class);
-						stopService(myIntent);
-					}else if (speed > Save_Min) {
-						/**
-						 * 1.2 æ˜µ•¿Ã∆Æ
-						 * ¡¯µø º≥¡§ ∞°¥…
-						 */
-						if(pref.getBoolean("Vibrator", false)){
-							Vibrator vide = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-							vide.vibrate(500);
-						}
-						DeviceManager.lockNow();
-					}
-					lastX = event.values[DATA_X];
-					lastY = event.values[DATA_Y];
-					lastZ = event.values[DATA_Z];
-				}
-	       }
-	}
+    SensorManager sensorManager;
+
+    private void showNotify(Context mContext, boolean num) {
+        NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, new Intent(mContext, MainActivity.class), 0);
+
+        /**
+         * 2.0ÏóÖÎç∞Ïù¥Ìä∏
+         * ÎßàÏºì Î¶¨Î∑∞Î•º Î∞òÏòÅÌïòÏó¨ Ìà¨Î™Ö ÏÉÅÎã®Î∞î ÏïÑÏù¥ÏΩòÏùÑ Ï†ÅÏö©ÌïòÏòÄÏäµÎãàÎã§
+         */
+        if (num) {
+            Notification notification;
+            if (pref.getBoolean("clear_icon", false))
+                notification = new Notification(R.drawable.clear_icon, mContext.getString(R.string.app_name), System.currentTimeMillis());
+            else
+                notification = new Notification(R.drawable.ic_launcher, mContext.getString(R.string.app_name), System.currentTimeMillis());
+
+            notification.flags = Notification.FLAG_ONGOING_EVENT;
+
+            notification.setLatestEventInfo(mContext, mContext.getString(R.string.app_name), mContext.getString(R.string.running), contentIntent);
+            nm.notify(1234, notification);
+            /**
+             * 1.4 ÏóÖÎç∞Ïù¥Ìä∏ : Í∏¥Í∏â Ìå®Ïπò
+             * MinÍ∞íÏù¥ 250 ÏïÑÎûòÏù¥Î©¥ Ïã¨Í∞ÅÌïú ÏóêÎü¨Ïù¥ÎØÄÎ°ú ÏóêÎü¨ ÌëúÏãúÎ•º ÌïúÎã§
+             */
+        } else if (!num) {
+
+            Notification notification;
+            if (pref.getBoolean("clear_icon", false))
+                notification = new Notification(R.drawable.clear_icon, mContext.getString(R.string.app_name) + " " + mContext.getString(R.string.error), System.currentTimeMillis());
+            else
+                notification = new Notification(R.drawable.ic_launcher, mContext.getString(R.string.app_name) + " " + mContext.getString(R.string.error), System.currentTimeMillis());
+
+            notification.flags = Notification.FLAG_AUTO_CANCEL;
+            notification.setLatestEventInfo(mContext, mContext.getString(R.string.Service_Error_1), String.format(mContext.getString(R.string.Service_Error_2), Save_Min), contentIntent);
+            nm.notify(4444, notification);
+        }
+    }
+
+    private void DeleteNotify(Context mContext) {
+        NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancel(1234);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        pref = getSharedPreferences("preference", 0);
+
+        /**
+         * ÏïåÎ¶ºÏùÑ Ï†úÍ±∞Ìï¥ Îã¨ÎùºÎäî ÎßàÏºì Î¶¨Î∑∞Î•º Î∞òÏòÅÌïòÏó¨ ÏÑ§Ï†ïÏóêÏÑú ÏïåÎ¶º ÎπÑÌôúÏÑ±Ìôî Ïó¨Î∂ÄÎ•º ÏÑ§Ï†ïÌï†Ïàò ÏûàÏäµÎãàÎã§
+         */
+        if (pref.getBoolean("notification", true))
+            showNotify(this, true);
+
+        mPm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        DeviceManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor accelerormeterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        if (accelerormeterSensor != null)
+            sensorManager.registerListener(this, accelerormeterSensor, SensorManager.SENSOR_DELAY_GAME);
+
+        Save_Min = pref.getInt("MinSenser", 1000);
+        Save_Delay = pref.getInt("Delay", 1);
+    }
+
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName adminComponent = new ComponentName(this, AdminReceiver.class);
+        if (devicePolicyManager.isAdminActive(adminComponent))
+            devicePolicyManager.removeActiveAdmin(adminComponent);
+
+        if (sensorManager != null)
+            sensorManager.unregisterListener(this);
+
+        if (pref.getBoolean("notification", false))
+            DeleteNotify(this);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (mPm.isScreenOn())
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                long currentTime = System.currentTimeMillis();
+                long gabOfTime = currentTime - lastTime;
+                if (gabOfTime > 100) {
+                    lastTime = currentTime;
+                    float x = event.values[SensorManager.DATA_X];
+                    float y = event.values[SensorManager.DATA_Y];
+                    float z = event.values[SensorManager.DATA_Z];
+
+                    float speed = Math.abs(x + y + z - lastX - lastY - lastZ) / gabOfTime * 10000;
+
+                    if (Save_Min < 250) {
+                        if (sensorManager != null)
+                            sensorManager.unregisterListener(this);
+                        if (pref.getBoolean("notification", false)) {
+                            DeleteNotify(this);
+                            showNotify(this, false);
+                        }
+                        stopSelf();
+
+                        Intent myIntent = new Intent(getBaseContext(), GiveMePhoneService.class);
+                        stopService(myIntent);
+                    } else if (speed > Save_Min) {
+                        /**
+                         * 1.2 ÏóÖÎç∞Ïù¥Ìä∏
+                         * ÏßÑÎèô ÏÑ§Ï†ï Í∞ÄÎä•
+                         */
+                        if (pref.getBoolean("Vibrator", false)) {
+                            Vibrator vide = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vide.vibrate(500);
+                        }
+                        DeviceManager.lockNow();
+                    }
+                    lastX = event.values[DATA_X];
+                    lastY = event.values[DATA_Y];
+                    lastZ = event.values[DATA_Z];
+                }
+            }
+    }
 }

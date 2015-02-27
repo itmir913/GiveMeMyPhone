@@ -21,234 +21,237 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	
-	/**
-	 * 2.0 ¾÷µ¥ÀÌÆ®
-	 * ÃÌÆ¼³ª´Â UI¸¦ ¸ğµÎ º¯°æÇÏ¿© ½ÉÇÃÇÏ°í, Æí¸®ÇÑ UI·Î º¯°æ
-	 * UIº¯°æ ÀÛ¾÷À¸·Î »õ·Î ¸¸µé¾îÁø ¾×Æ¼ºñÆ¼ : MainActivity.java, SettingActivity.java
-	 * Á¦°ÅµÈ ¾×Æ¼ºñÆ¼ : PassWord_Make.java
-	 * ±â´É Ãß°¡·Î Ãß°¡µÈ ¾×Æ¼ºñÆ¼ : ScreenService.java
-	 */
-	
-	/**
-	 * 1.1 ¾÷µ¥ÀÌÆ®
-	 * ¼³Á¤°ªÀ» ÀúÀåÇÒ¼ö ÀÖ´Â SharedPreferencesÀ» »ç¿ëÇÏ¿© ±¸Çö
-	 * SharedPreferencesÀ» ÀÌ¿ëÇØ¼­ °ªÀÌ º¯ÇÒ¶§¸¶´Ù ½Ç½Ã°£À¸·Î º¯ÇÑ °ªÀ» ÀúÀåÇÏ°í,
-	 * ¼­ºñ½º¿Í ºê·ÎµåÄ³½ºÆ®¸®½Ã¹ö¿¡¼­´Â ÀúÀåÇÑ °ªÀ» ¾ò¾î¿Í¼­ ±¸Çö¿¡ ¼º°øÇß½À´Ï´Ù
-	 */
-	SharedPreferences pref;
-	SharedPreferences.Editor editor;
-	
-	/**
-	 * °ü¸®ÀÚ ±ÇÇÑÀ» ¾ò±âÀ§ÇÑ ÄÚµå
-	 */
-	DevicePolicyManager devicePolicyManager;
-	ComponentName adminComponent;
-	
-	Button start_Btn;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
-		pref = getSharedPreferences("preference", 0);
-		editor = pref.edit();
-		
-		if (pref.getBoolean("welcome", true)){
-			editor.putBoolean("welcome", false).commit();
-			startActivity(new Intent(this, Welcome.class));
-		}
-		
-		boolean unlocked_password = getIntent().getBooleanExtra("PassWord_Enable", false);
-        if(!unlocked_password)
-            if(pref.getBoolean("password_enable", false)){
-                startActivity(new Intent(this, PassWord.class));
-                finish();
+
+    /**
+     * 2.0 ì—…ë°ì´íŠ¸
+     * ì´Œí‹°ë‚˜ëŠ” UIë¥¼ ëª¨ë‘ ë³€ê²½í•˜ì—¬ ì‹¬í”Œí•˜ê³ , í¸ë¦¬í•œ UIë¡œ ë³€ê²½
+     * UIë³€ê²½ ì‘ì—…ìœ¼ë¡œ ìƒˆë¡œ ë§Œë“¤ì–´ì§„ ì•¡í‹°ë¹„í‹° : MainActivity.java, SettingActivity.java
+     * ì œê±°ëœ ì•¡í‹°ë¹„í‹° : PassWord_Make.java
+     * ê¸°ëŠ¥ ì¶”ê°€ë¡œ ì¶”ê°€ëœ ì•¡í‹°ë¹„í‹° : ScreenService.java
+     */
+
+    /**
+     * 1.1 ì—…ë°ì´íŠ¸
+     * ì„¤ì •ê°’ì„ ì €ì¥í• ìˆ˜ ìˆëŠ” SharedPreferencesì„ ì‚¬ìš©í•˜ì—¬ êµ¬í˜„
+     * SharedPreferencesì„ ì´ìš©í•´ì„œ ê°’ì´ ë³€í• ë•Œë§ˆë‹¤ ì‹¤ì‹œê°„ìœ¼ë¡œ ë³€í•œ ê°’ì„ ì €ì¥í•˜ê³ ,
+     * ì„œë¹„ìŠ¤ì™€ ë¸Œë¡œë“œìºìŠ¤íŠ¸ë¦¬ì‹œë²„ì—ì„œëŠ” ì €ì¥í•œ ê°’ì„ ì–»ì–´ì™€ì„œ êµ¬í˜„ì— ì„±ê³µí–ˆìŠµë‹ˆë‹¤
+     */
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
+    /**
+     * ê´€ë¦¬ì ê¶Œí•œì„ ì–»ê¸°ìœ„í•œ ì½”ë“œ
+     */
+    DevicePolicyManager devicePolicyManager;
+    ComponentName adminComponent;
+
+    Button start_Btn;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        pref = getSharedPreferences("preference", 0);
+        editor = pref.edit();
+
+        if (pref.getBoolean("welcome", true)){
+            editor.putBoolean("welcome", false).commit();
+            startActivity(new Intent(this, Welcome.class));
+        }
+
+//        boolean unlocked_password = getIntent().getBooleanExtra("PassWord_Enable", false);
+//        if(!unlocked_password)
+//            if(pref.getBoolean("password_enable", false)){
+//                startActivity(new Intent(this, PassWord.class));
+//                finish();
+//            }
+
+        /**
+         * 1.6 ì—…ë°ì´íŠ¸
+         * ì—…ë°ì´íŠ¸ë§ˆë‹¤ ë¡œê·¸ë¥¼ í‘œì‹œí•˜ë„ë¡ ì„¤ì •
+         */
+        try {
+            PackageManager packageManager = this.getPackageManager();
+            PackageInfo infor =  packageManager.getPackageInfo(this.getPackageName(), PackageManager.GET_META_DATA);
+            int code = infor.versionCode;
+
+            if (pref.getInt("update_code", 0)!=code){
+                editor.putInt("update_code", code).commit();
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle(R.string.ok);
+                alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.setMessage(R.string.update_log);
+                alert.show();
+
             }
-		
-		/**
-		 * 1.6 ¾÷µ¥ÀÌÆ®
-		 * ¾÷µ¥ÀÌÆ®¸¶´Ù ·Î±×¸¦ Ç¥½ÃÇÏµµ·Ï ¼³Á¤
-		 */
-		try {
-			PackageManager packageManager = this.getPackageManager();
-			PackageInfo infor =  packageManager.getPackageInfo(this.getPackageName(), PackageManager.GET_META_DATA);
-		    int code = infor.versionCode;
-		    
-		    if (pref.getInt("update_code", 0)!=code){
-				editor.putInt("update_code", code).commit();
-				
-				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setTitle(R.string.ok);
-				alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				    @Override
-				    public void onClick(DialogInterface dialog, int which) {
-				    dialog.dismiss();
-				    }
-				});
-				alert.setMessage(R.string.update_log);
-				alert.show();
-				
-			}
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		adminComponent = new ComponentName(this, AdminReceiver.class);
-		devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-		
-		/**
-		 * °ü¸®ÀÚ ±ÇÇÑÀÌ ¾øÀ»°æ¿ì, ±ÇÇÑ ½ÂÀÎÃ¢À» Ç¥½ÃÇÕ´Ï´Ù
-		 */
-		if (!devicePolicyManager.isAdminActive(adminComponent)){
-			Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-			intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent);
-			intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-					getString(R.string.device_admin));
-			startActivityForResult(intent, 1);
-		}
-		
-		start_Btn = (Button) findViewById(R.id.service);
-		
-		/**
-		 * 2.1.1 ¾÷µ¥ÀÌÆ®
-		 * ¼­ºñ½º°¡ ½ÇÇàµÈ »óÅÂ¿¡¼­ ¾îÇÃÀ» Ä×À»¶§ ÁßÁö¹öÆ°À¸·Î ¹Ù²îÁö ¾Ê´ø ¿À·ù ÇØ°á
-		 */
-		if(isServiceRunningCheck()){
-			start_Btn.setText(R.string.stopBtn);
-			start_Btn.setBackgroundResource(R.drawable.stop);
-		}
-	}
-	
-	public void start_btn(View v){
-		
- 	   // °ü¸®ÀÚ ±ÇÇÑÀÌ ¾øÀ»°æ¿ì ¾Ë¸²À» ¶ç¿ì°í ¼­ºñ½º ½ÇÇàÀ» Áß´ÜÇÕ´Ï´Ù
- 	   if (!devicePolicyManager.isAdminActive(adminComponent)){
-			AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-			alert.setTitle(R.string.alert);
-			alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-					intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent);
-					intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-							getString(R.string.device_admin));
-					startActivityForResult(intent, 1);
-				}
-			});
-			alert.setMessage(R.string.alert_message);
-			alert.show();
-			
-		}else{ // °ü¸®ÀÚ ±ÇÇÑÀÌ ÀÖÀ»°æ¿ì else°¡ ½ÇÇàµË´Ï´Ù
-			
-			int MinSenserInt = pref.getInt("MinSenser", 0);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        adminComponent = new ComponentName(this, AdminReceiver.class);
+        devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+        /**
+         * ê´€ë¦¬ì ê¶Œí•œì´ ì—†ì„ê²½ìš°, ê¶Œí•œ ìŠ¹ì¸ì°½ì„ í‘œì‹œí•©ë‹ˆë‹¤
+         */
+        if (!devicePolicyManager.isAdminActive(adminComponent)){
+            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent);
+            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                    getString(R.string.device_admin));
+            startActivityForResult(intent, 1);
+        }
+
+        start_Btn = (Button) findViewById(R.id.service);
+
+        /**
+         * 2.1.1 ì—…ë°ì´íŠ¸
+         * ì„œë¹„ìŠ¤ê°€ ì‹¤í–‰ëœ ìƒíƒœì—ì„œ ì–´í”Œì„ ì¼°ì„ë•Œ ì¤‘ì§€ë²„íŠ¼ìœ¼ë¡œ ë°”ë€Œì§€ ì•Šë˜ ì˜¤ë¥˜ í•´ê²°
+         */
+        if(isServiceRunningCheck()){
+            start_Btn.setText(R.string.stopBtn);
+            start_Btn.setBackgroundResource(R.drawable.stop);
+        }
+    }
+
+    public void start_btn(View v){
+
+        // ê´€ë¦¬ì ê¶Œí•œì´ ì—†ì„ê²½ìš° ì•Œë¦¼ì„ ë„ìš°ê³  ì„œë¹„ìŠ¤ ì‹¤í–‰ì„ ì¤‘ë‹¨í•©ë‹ˆë‹¤
+        if (!devicePolicyManager.isAdminActive(adminComponent)){
+            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+            alert.setTitle(R.string.alert);
+            alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                    intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent);
+                    intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                            getString(R.string.device_admin));
+                    startActivityForResult(intent, 1);
+                }
+            });
+            alert.setMessage(R.string.alert_message);
+            alert.show();
+
+        }else{ // ê´€ë¦¬ì ê¶Œí•œì´ ìˆì„ê²½ìš° elseê°€ ì‹¤í–‰ë©ë‹ˆë‹¤
+
+            int MinSenserInt = pref.getInt("MinSenser", 1000);
 //			int DelayInt = pref.getInt("Delay", 0);
-			
+
 //			Intent myIntent = new Intent(this, GiveMePhoneService.class);
-			
-			/**
-			 * ºê·ÎµåÄ³½ºÆ®¸®½Ã¹ö ¼ö½ÅÀ» ¹Ş±âÀ§ÇÑ ÀÎÅÙÆ®ÇÊÅÍ¸¦ »ı¼ºÇÕ´Ï´Ù.
-			 */
+
+            /**
+             * ë¸Œë¡œë“œìºìŠ¤íŠ¸ë¦¬ì‹œë²„ ìˆ˜ì‹ ì„ ë°›ê¸°ìœ„í•œ ì¸í…íŠ¸í•„í„°ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
+             */
 //			IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 //			filter.addAction(Intent.ACTION_SCREEN_OFF);
 //			filter.addAction(Intent.ACTION_BOOT_COMPLETED);
-			
-			/**
-		     * 1.1 ¾÷µ¥ÀÌÆ®
-		     * MinSenserIntÀÌ 250¾Æ·¡°¡ ¾Æ´Ò°æ¿ì if°¡ true°¡ µÇ¼­ ÁøÇàÀÌ °¡´ÉÇÏ´Ù
-		     */
-			
-			if(!(MinSenserInt<=250))
-			 	   if(isServiceRunningCheck()) { // ¼­ºñ½º°¡ µ¹¾Æ°¡°í ÀÖ´Â »óÅÂÀÏ°æ¿ì ¼­ºñ½º¸¦ Áß´ÜÇÕ´Ï´Ù isServiceRunningCheck()´Â ¾Æ·¡¿¡ Á¤ÀÇµÇ¾î ÀÖ½À´Ï´Ù
-			 		  /**
-			 		    * 1.1 ¾÷µ¥ÀÌÆ® ¹ö±× ÇÈ½º
-			 		    * Èñ¾ÈÇÏ°Ô unregisterReceiver(myReceiver);¿¡¼­ °­Á¦Á¾·á ¿À·ù°¡ ¶ß¹Ç·Î
-			 		    * try-catch·Î Àâ¾ÆÁÜ
-			 		    */
+
+            /**
+             * 1.1 ì—…ë°ì´íŠ¸
+             * MinSenserIntì´ 250ì•„ë˜ê°€ ì•„ë‹ê²½ìš° ifê°€ trueê°€ ë˜ì„œ ì§„í–‰ì´ ê°€ëŠ¥í•˜ë‹¤
+             */
+
+            if(!(MinSenserInt<=250))
+                if(isServiceRunningCheck()) { // ì„œë¹„ìŠ¤ê°€ ëŒì•„ê°€ê³  ìˆëŠ” ìƒíƒœì¼ê²½ìš° ì„œë¹„ìŠ¤ë¥¼ ì¤‘ë‹¨í•©ë‹ˆë‹¤ isServiceRunningCheck()ëŠ” ì•„ë˜ì— ì •ì˜ë˜ì–´ ìˆìŠµë‹ˆë‹¤
+                    /**
+                     * 1.1 ì—…ë°ì´íŠ¸ ë²„ê·¸ í”½ìŠ¤
+                     * í¬ì•ˆí•˜ê²Œ unregisterReceiver(myReceiver);ì—ì„œ ê°•ì œì¢…ë£Œ ì˜¤ë¥˜ê°€ ëœ¨ë¯€ë¡œ
+                     * try-catchë¡œ ì¡ì•„ì¤Œ
+                     */
 //			 		  try {
 //					      unregisterReceiver(myReceiver);
-//					      Log.d("ºê·ÎµåÄ³½ºÆ®", "ÁßÁö"); } catch (Exception e) { }
-			 		   
-			 		  stopService(new Intent(this, GiveMePhoneService.class));
-			 		  stopService(new Intent(this, ScreenService.class));
-			 		  
-			 		  editor.remove("Service_Running").commit();
-			 		  
-			 		  start_Btn.setText(R.string.serviceBtn);
-			 		  start_Btn.setBackgroundResource(R.drawable.start);
-			 	  }else{ // ¼­ºñ½º°¡ µ¹¾Æ°¡Áö ¾Ê´Â »óÅÂÀÏ°æ¿ì ¼­ºñ½º¸¦ ½ÇÇàÇÕ´Ï´Ù
+//					      Log.d("ë¸Œë¡œë“œìºìŠ¤íŠ¸", "ì¤‘ì§€"); } catch (Exception e) { }
+
+                    stopService(new Intent(this, GiveMePhoneService.class));
+                    stopService(new Intent(this, ScreenService.class));
+
+                    editor.remove("Service_Running").commit();
+
+                    start_Btn.setText(R.string.serviceBtn);
+                    start_Btn.setBackgroundResource(R.drawable.start);
+
+                    if (devicePolicyManager.isAdminActive(adminComponent))
+                        devicePolicyManager.removeActiveAdmin(adminComponent);
+                }else{ // ì„œë¹„ìŠ¤ê°€ ëŒì•„ê°€ì§€ ì•ŠëŠ” ìƒíƒœì¼ê²½ìš° ì„œë¹„ìŠ¤ë¥¼ ì‹¤í–‰í•©ë‹ˆë‹¤
 //			 		  registerReceiver(myReceiver, filter);
-//			 	      Log.d("ºê·ÎµåÄ³½ºÆ®", "½ÃÀÛ");
-			 		  
-			 		  startService(new Intent(this, GiveMePhoneService.class));
-			 		  startService(new Intent(this, ScreenService.class));
-			 		  
-			 		  editor.putBoolean("Service_Running", true).commit();
-			 		  
-				      start_Btn.setText(R.string.stopBtn);
-				      start_Btn.setBackgroundResource(R.drawable.stop);
-				      
+//			 	      Log.d("ë¸Œë¡œë“œìºìŠ¤íŠ¸", "ì‹œì‘");
+
+                    startService(new Intent(this, GiveMePhoneService.class));
+                    startService(new Intent(this, ScreenService.class));
+
+                    editor.putBoolean("Service_Running", true).commit();
+
+                    start_Btn.setText(R.string.stopBtn);
+                    start_Btn.setBackgroundResource(R.drawable.stop);
+
 //				      Toast.makeText(this, R.string.serviceBtn, Toast.LENGTH_SHORT).show();
-				  }
-			else{
-				Toast.makeText(this, R.string.service_not_start, Toast.LENGTH_SHORT).show();
-			}
-		}
-		
-	}
-	
-	public void setting_btn(View v){
-		startActivity(new Intent(this, SettingActivity.class));
-	}
-	
-	/**
-	 * 2.0 ¾÷µ¥ÀÌÆ®
-	 * ¾îÇÃ Á¦°Å ¹öÆ°À» ³»ÀåÇÏ¿© ³­µ¶Áõ ÀÖ´Â ºĞµéÀ» ¹è·Á
-	 * ¼­ºñ½º°¡ ½ÇÇàÁßÀÌ¸é Á¦°Å°¡ ºÒ°¡´ÉÇÏ°Ô ÇÏ¿´°í °ü¸®ÀÚ ±ÇÇÑ Ãë¼Ò¿Í ÇÔ²² ¾îÇÃ Á¦°Å ±îÁö ÀÌ·ç¾î Áø´Ù
-	 */
-	public void del_btn(View v){
-		if(!isServiceRunningCheck()){
-			if (devicePolicyManager.isAdminActive(adminComponent))
-				devicePolicyManager.removeActiveAdmin(adminComponent);
-			
-			Uri uri = Uri.fromParts("package", "com.leejonghwan.givememyphone", null);    
-			Intent it = new Intent(Intent.ACTION_DELETE, uri);    
-			startActivity(it);
-		}else{
-			Toast.makeText(this, R.string.Not_Install, Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	/**
-	 * ¼­ºñ½º°¡ ½ÇÇàµÇ¾ú´ÂÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå·Î
-	 * ½ÇÇàÁßÀÌ¸é true, ½ÇÇàÀÌ ¾ÈµÇ¾î ÀÖÀ¸¸é false¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå ÀÔ´Ï´Ù
-	 * 
-	 * 1.1¾÷µ¥ÀÌÆ®
-	 * ºê·ÎµåÄ³½ºÆ®¸®½Ã¹ö¿¡¼­ ÂüÁ¶¸¦ À§ÇØ staticÀ¸·Î ¼±¾ğ º¯°æ
-	 */
-	 boolean isServiceRunningCheck() {
-	    	ActivityManager manager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-	    	for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-	    	    if ("com.leejonghwan.givememyphone.GiveMePhoneService".equals(service.service.getClassName()))
-	    	        return true;
-	    	/** 
-	    	 * 1.1 ¾÷µ¥ÀÌÆ®
-	    	 * ÄÚµåÀÇ °£°áÈ­ : ¾µ´ë¾ø´Â { ¿Í }ÀÇ »ç¿ëÀ» ¹æÁö
-	    	 */
-	    	return false;
-	}
-	
-	@Override
+                }
+            else{
+                Toast.makeText(this, R.string.service_not_start, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    public void setting_btn(View v){
+        startActivity(new Intent(this, SettingActivity.class));
+    }
+
+    /**
+     * 2.0 ì—…ë°ì´íŠ¸
+     * ì–´í”Œ ì œê±° ë²„íŠ¼ì„ ë‚´ì¥í•˜ì—¬ ë‚œë…ì¦ ìˆëŠ” ë¶„ë“¤ì„ ë°°ë ¤
+     * ì„œë¹„ìŠ¤ê°€ ì‹¤í–‰ì¤‘ì´ë©´ ì œê±°ê°€ ë¶ˆê°€ëŠ¥í•˜ê²Œ í•˜ì˜€ê³  ê´€ë¦¬ì ê¶Œí•œ ì·¨ì†Œì™€ í•¨ê»˜ ì–´í”Œ ì œê±° ê¹Œì§€ ì´ë£¨ì–´ ì§„ë‹¤
+     */
+    public void del_btn(View v){
+        if(!isServiceRunningCheck()){
+            if (devicePolicyManager.isAdminActive(adminComponent))
+                devicePolicyManager.removeActiveAdmin(adminComponent);
+
+            Uri uri = Uri.fromParts("package", "com.leejonghwan.givememyphone", null);
+            Intent it = new Intent(Intent.ACTION_DELETE, uri);
+            startActivity(it);
+        }else{
+            Toast.makeText(this, R.string.Not_Install, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * ì„œë¹„ìŠ¤ê°€ ì‹¤í–‰ë˜ì—ˆëŠ”ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œë¡œ
+     * ì‹¤í–‰ì¤‘ì´ë©´ true, ì‹¤í–‰ì´ ì•ˆë˜ì–´ ìˆìœ¼ë©´ falseë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ ì…ë‹ˆë‹¤
+     *
+     * 1.1ì—…ë°ì´íŠ¸
+     * ë¸Œë¡œë“œìºìŠ¤íŠ¸ë¦¬ì‹œë²„ì—ì„œ ì°¸ì¡°ë¥¼ ìœ„í•´ staticìœ¼ë¡œ ì„ ì–¸ ë³€ê²½
+     */
+    boolean isServiceRunningCheck() {
+        ActivityManager manager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+            if ("com.leejonghwan.givememyphone.GiveMePhoneService".equals(service.service.getClassName()))
+                return true;
+        /**
+         * 1.1 ì—…ë°ì´íŠ¸
+         * ì½”ë“œì˜ ê°„ê²°í™” : ì“¸ëŒ€ì—†ëŠ” { ì™€ }ì˜ ì‚¬ìš©ì„ ë°©ì§€
+         */
+        return false;
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
-  
+
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-        	System.gc();
-        	finish();
-        	return true;
+            System.gc();
+            finish();
+            return true;
         }
         return super.onKeyDown(keyCode, event);
     }
-	
+
 }

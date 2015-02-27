@@ -6,15 +6,15 @@ import android.content.Intent;
 import android.widget.Toast;
 
 public class AdminReceiver extends DeviceAdminReceiver {
-	 /**
-	  * ±â±â°ü¸®ÀÚ°¡ ÇØÁ¦µÇ¾úÀ»‹š ÇÒ ÀÛ¾÷À» ¸í½ÃÇØ Áİ´Ï´Ù
-	  */
-	 @Override
-	 public void onDisabled(Context context, Intent intent) {
-		 Toast.makeText(context, R.string.device_admin_disabled, Toast.LENGTH_SHORT).show();
-	 }
-	 
-	 /**
-	  * http://hns17.tistory.com/114 ÀÌ»çÀÌÆ®¸¦ ¾ÆÁÖ ¸¹ÀÌ ÂüÁ¶Çß½À´Ï´Ù
-	  */
+    /**
+     * ê¸°ê¸°ê´€ë¦¬ìê°€ í•´ì œë˜ì—ˆì„Â‹Âš í•  ì‘ì—…ì„ ëª…ì‹œí•´ ì¤ë‹ˆë‹¤
+     */
+    @Override
+    public void onDisabled(Context context, Intent intent) {
+        Toast.makeText(context, R.string.device_admin_disabled, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * http://hns17.tistory.com/114 ì´ì‚¬ì´íŠ¸ë¥¼ ì•„ì£¼ ë§ì´ ì°¸ì¡°í–ˆìŠµë‹ˆë‹¤
+     */
 }

@@ -26,246 +26,246 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SettingActivity extends Activity {
-	
-	SharedPreferences pref;
-	SharedPreferences.Editor editor;
-	
-	SeekBar MinSenser, Delay;
-	TextView MinText, DelayText, madeby;
-	CheckBox bootable, Vibrator, password_enable, notification, icon_clear;
 
-	@SuppressLint("CommitPrefEdits")
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_setting);
-		
-		pref = getSharedPreferences("preference", 0);
-		editor = pref.edit();
-		
-		bootable = (CheckBox) findViewById(R.id.bootable);
-		Vibrator = (CheckBox) findViewById(R.id.Vibrator);
-		password_enable = (CheckBox) findViewById(R.id.password_enable);
-		notification = (CheckBox) findViewById(R.id.notification);
-		icon_clear = (CheckBox) findViewById(R.id.notification_clear_icon);
-		
-		MinText = (TextView) findViewById(R.id.MinText);
-		DelayText = (TextView) findViewById(R.id.DelayText);
-		
-		Delay = (SeekBar) findViewById(R.id.Delay);
-		MinSenser = (SeekBar) findViewById(R.id.MinSenser);
-		
-		if(pref.getBoolean("boot", true)) // ºÎÆÃ½Ã ÀÚµ¿Àû¿ëÀÌ ¼³Á¤µÇ¾î ÀÖÀ¸¸é Ã¼Å©ÇÔ
-			bootable.setChecked(true);
-		if(pref.getBoolean("Vibrator", false))
-			Vibrator.setChecked(true);
-		if(pref.getBoolean("password_enable", false))
-			password_enable.setChecked(true);
-		if(pref.getBoolean("notification", false)){
-			notification.setChecked(true);
-			icon_clear.setVisibility(View.VISIBLE);
-			if(pref.getBoolean("clear_icon", false))
-				icon_clear.setChecked(true);
-		}
-		
-		MinText.setText(String.format(getString(R.string.min), pref.getInt("MinSenser", 1000)));
-		DelayText.setText(String.format(getString(R.string.Delay), pref.getInt("Delay", 1)));
-		
-		MinSenser.setProgress(pref.getInt("MinSenser", 1000));
-		Delay.setProgress(pref.getInt("Delay", 1));
-		
-		CheckBoxListener();
-		SeekBarListener();
-		
-		if(isServiceRunningCheck(this)) {
-			MinSenser.setEnabled(false);
-			Delay.setEnabled(false);
-			bootable.setEnabled(false);
-			Vibrator.setEnabled(false);
-			password_enable.setEnabled(false);
-			notification.setEnabled(false);
-			icon_clear.setEnabled(false);
-		}
-		
-		madeby = (TextView) findViewById(R.id.madeby);
-		try{
-			PackageManager packageManager = this.getPackageManager();
-			PackageInfo infor =  packageManager.getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
-			
-			madeby.setText(String.format(getString(R.string.madeby), infor.versionName));
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void SeekBarListener(){
-		MinSenser.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				
-			}
-			
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				
-			}
-			
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				
-				if (progress>1400)
-					MinText.setText(String.format(getString(R.string.min)+getString(R.string.not_work), progress));
-				/**
-				 * 1.1 ¾÷µ¥ÀÌÆ®
-				 * °ªÀ» 250¾Æ·¡·Î ¼³Á¤ÇÑ°æ¿ì ±ÛÀÚ»öÀ» »¡°­»öÀ¸·Î ¹Ù²Ù°í »ç¿ëÇÒ¼ö ¾ø´Ù´Â ÅØ½ºÆ®¸¦ Ç¥½ÃÇÔ
-				 */
-				else if(progress<=250){
-					MinText.setText(Html.fromHtml("<font color='#FF0000'>"+String.format(getString(R.string.min)+getString(R.string.not_used), progress)+"</font>"));
-					editor.putInt("MinSenser", 251).commit();
-					MinSenser.setProgress(250);
-					return;
-				}else if(progress<=480)
-					MinText.setText(String.format(getString(R.string.min)+getString(R.string.very_sore), progress));
-				else
-					MinText.setText(String.format(getString(R.string.min), progress));
-				
-				editor.putInt("MinSenser", progress).commit();
-			}
-		});
-		
-		Delay.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				
-			}
-			
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				
-			}
-			
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				
-				if (progress>6)
-					DelayText.setText(String.format(getString(R.string.Delay)+getString(R.string.not_work), progress));
-				else if(progress<1)
-					DelayText.setText(String.format(getString(R.string.Delay)+getString(R.string.very_sore), progress));
-				else
-					DelayText.setText(String.format(getString(R.string.Delay), progress));
-				
-				editor.putInt("Delay", progress).commit();
-			}
-		});
-		
-	}
-	
-	public void CheckBoxListener(){
-		bootable.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked){
-					editor.putBoolean("boot", true).commit();
-				}else{
-					editor.putBoolean("boot", false).commit();
-				}
-			}
-		});
-		
-		Vibrator.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked){
-					editor.putBoolean("Vibrator", true).commit();
-				}else{
-					editor.putBoolean("Vibrator", false).commit();
-				}
-			}
-		});
-		
-		password_enable.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				
-				if(isChecked){
-					LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					final View view = inflater.inflate(R.layout.activity_pass_word_make, null);
-					
-					AlertDialog.Builder alert = new AlertDialog.Builder(SettingActivity.this);
-					alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							String Inputpassword = ((EditText) view.findViewById(R.id.password_edittext)).getText().toString();
-							if(Inputpassword.equals("")){
-								Toast.makeText(SettingActivity.this, R.string.blank, Toast.LENGTH_SHORT).show();
-								password_enable.setChecked(false);
-							}else{
-								editor.putString("password", Inputpassword);
-								editor.putBoolean("password_enable", true).commit();
-								Toast.makeText(SettingActivity.this, R.string.enter_password_ok, Toast.LENGTH_SHORT).show();
-							}
-							dialog.dismiss();
-						}
-					});
-					alert.setNegativeButton(R.string.exit, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							password_enable.setChecked(false);
-							dialog.dismiss();
-						}
-					});
-					alert.setView(view);
-					alert.show();
-				}else{
-					editor.remove("password_enable");
-					editor.remove("password").commit();
-				}
-			}
-		});
-		
-		notification.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked){
-					editor.putBoolean("notification", true).commit();
-					icon_clear.setVisibility(View.VISIBLE);
-				}else{
-					editor.remove("clear_icon");
-					editor.putBoolean("notification", false).commit();
-					icon_clear.setChecked(false);
-					icon_clear.setVisibility(View.GONE);
-				}
-			}
-		});
-		
-		icon_clear.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked){
-					editor.putBoolean("clear_icon", true).commit();
-				}else{
-					editor.remove("clear_icon").commit();
-				}
-			}
-		});
-	}
-	
-	
-	boolean isServiceRunningCheck(Context context) {
-    	ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-    	for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-    	    if ("com.leejonghwan.givememyphone.GiveMePhoneService".equals(service.service.getClassName()))
-    	        return true;
-    	return false;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
+    SeekBar MinSenser, Delay;
+    TextView MinText, DelayText, madeby;
+    CheckBox bootable, Vibrator, password_enable, notification, icon_clear;
+
+    @SuppressLint("CommitPrefEdits")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting);
+
+        pref = getSharedPreferences("preference", 0);
+        editor = pref.edit();
+
+        bootable = (CheckBox) findViewById(R.id.bootable);
+        Vibrator = (CheckBox) findViewById(R.id.Vibrator);
+        password_enable = (CheckBox) findViewById(R.id.password_enable);
+        notification = (CheckBox) findViewById(R.id.notification);
+        icon_clear = (CheckBox) findViewById(R.id.notification_clear_icon);
+
+        MinText = (TextView) findViewById(R.id.MinText);
+        DelayText = (TextView) findViewById(R.id.DelayText);
+
+        Delay = (SeekBar) findViewById(R.id.Delay);
+        MinSenser = (SeekBar) findViewById(R.id.MinSenser);
+
+        if(pref.getBoolean("boot", true)) // ë¶€íŒ…ì‹œ ìë™ì ìš©ì´ ì„¤ì •ë˜ì–´ ìˆìœ¼ë©´ ì²´í¬í•¨
+            bootable.setChecked(true);
+        if(pref.getBoolean("Vibrator", false))
+            Vibrator.setChecked(true);
+        if(pref.getBoolean("password_enable", false))
+            password_enable.setChecked(true);
+        if(pref.getBoolean("notification", false)){
+            notification.setChecked(true);
+            icon_clear.setVisibility(View.VISIBLE);
+            if(pref.getBoolean("clear_icon", false))
+                icon_clear.setChecked(true);
+        }
+
+        MinText.setText(String.format(getString(R.string.min), pref.getInt("MinSenser", 1000)));
+        DelayText.setText(String.format(getString(R.string.Delay), pref.getInt("Delay", 1)));
+
+        MinSenser.setProgress(pref.getInt("MinSenser", 1000));
+        Delay.setProgress(pref.getInt("Delay", 1));
+
+        CheckBoxListener();
+        SeekBarListener();
+
+        if(isServiceRunningCheck(this)) {
+            MinSenser.setEnabled(false);
+            Delay.setEnabled(false);
+            bootable.setEnabled(false);
+            Vibrator.setEnabled(false);
+            password_enable.setEnabled(false);
+            notification.setEnabled(false);
+            icon_clear.setEnabled(false);
+        }
+
+        madeby = (TextView) findViewById(R.id.madeby);
+        try{
+            PackageManager packageManager = this.getPackageManager();
+            PackageInfo infor =  packageManager.getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
+
+            madeby.setText(String.format(getString(R.string.madeby), infor.versionName));
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
-	
+
+    public void SeekBarListener(){
+        MinSenser.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+
+                if (progress>1400)
+                    MinText.setText(String.format(getString(R.string.min)+getString(R.string.not_work), progress));
+                /**
+                 * 1.1 ì—…ë°ì´íŠ¸
+                 * ê°’ì„ 250ì•„ë˜ë¡œ ì„¤ì •í•œê²½ìš° ê¸€ììƒ‰ì„ ë¹¨ê°•ìƒ‰ìœ¼ë¡œ ë°”ê¾¸ê³  ì‚¬ìš©í• ìˆ˜ ì—†ë‹¤ëŠ” í…ìŠ¤íŠ¸ë¥¼ í‘œì‹œí•¨
+                 */
+                else if(progress<=250){
+                    MinText.setText(Html.fromHtml("<font color='#FF0000'>"+String.format(getString(R.string.min)+getString(R.string.not_used), progress)+"</font>"));
+                    editor.putInt("MinSenser", 251).commit();
+                    MinSenser.setProgress(250);
+                    return;
+                }else if(progress<=480)
+                    MinText.setText(String.format(getString(R.string.min)+getString(R.string.very_sore), progress));
+                else
+                    MinText.setText(String.format(getString(R.string.min), progress));
+
+                editor.putInt("MinSenser", progress).commit();
+            }
+        });
+
+        Delay.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+
+                if (progress>6)
+                    DelayText.setText(String.format(getString(R.string.Delay)+getString(R.string.not_work), progress));
+                else if(progress<1)
+                    DelayText.setText(String.format(getString(R.string.Delay)+getString(R.string.very_sore), progress));
+                else
+                    DelayText.setText(String.format(getString(R.string.Delay), progress));
+
+                editor.putInt("Delay", progress).commit();
+            }
+        });
+
+    }
+
+    public void CheckBoxListener(){
+        bootable.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    editor.putBoolean("boot", true).commit();
+                }else{
+                    editor.putBoolean("boot", false).commit();
+                }
+            }
+        });
+
+        Vibrator.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    editor.putBoolean("Vibrator", true).commit();
+                }else{
+                    editor.putBoolean("Vibrator", false).commit();
+                }
+            }
+        });
+
+        password_enable.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    final View view = inflater.inflate(R.layout.activity_pass_word_make, null);
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(SettingActivity.this);
+                    alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String Inputpassword = ((EditText) view.findViewById(R.id.password_edittext)).getText().toString();
+                            if(Inputpassword.equals("")){
+                                Toast.makeText(SettingActivity.this, R.string.blank, Toast.LENGTH_SHORT).show();
+                                password_enable.setChecked(false);
+                            }else{
+                                editor.putString("password", Inputpassword);
+                                editor.putBoolean("password_enable", true).commit();
+                                Toast.makeText(SettingActivity.this, R.string.enter_password_ok, Toast.LENGTH_SHORT).show();
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.setNegativeButton(R.string.exit, new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            password_enable.setChecked(false);
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.setView(view);
+                    alert.show();
+                }else{
+                    editor.remove("password_enable");
+                    editor.remove("password").commit();
+                }
+            }
+        });
+
+        notification.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    editor.putBoolean("notification", true).commit();
+                    icon_clear.setVisibility(View.VISIBLE);
+                }else{
+                    editor.remove("clear_icon");
+                    editor.putBoolean("notification", false).commit();
+                    icon_clear.setChecked(false);
+                    icon_clear.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        icon_clear.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    editor.putBoolean("clear_icon", true).commit();
+                }else{
+                    editor.remove("clear_icon").commit();
+                }
+            }
+        });
+    }
+
+
+    boolean isServiceRunningCheck(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+            if ("com.leejonghwan.givememyphone.GiveMePhoneService".equals(service.service.getClassName()))
+                return true;
+        return false;
+    }
+
 }
