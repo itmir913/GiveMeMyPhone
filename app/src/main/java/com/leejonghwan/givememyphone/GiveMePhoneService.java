@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -106,11 +105,6 @@ public class GiveMePhoneService extends Service implements SensorEventListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-        ComponentName adminComponent = new ComponentName(this, AdminReceiver.class);
-        if (devicePolicyManager.isAdminActive(adminComponent))
-            devicePolicyManager.removeActiveAdmin(adminComponent);
 
         if (sensorManager != null)
             sensorManager.unregisterListener(this);
